@@ -1,35 +1,56 @@
-echo "Server starting..."
-
+clear
 IFS=
 
-CLIENT_CODE=$(cat ./client/client.mjs)
+# Converts ModuleJS into CommonJS
+module_to_common() {
+    return_value="$(echo $1 | sed 's/export class/class/g' | sed 's/export function/function/g' | sed 's/export const/const/g')"
+}
 
-CLIENT_REPLACE_CLASS=`echo $CLIENT_CODE | sed 's/export class/class/g'`
+# Removes the "set object properties wtv"
+remove_beginning_compiled() {
+    return_value="$(echo $1 | sed 's/Object.defineProperty(exports, "__esModule", { value: true });/""/g')"
+}
 
-CLIENT_REPLACE_CONST=`echo $CLIENT_REPLACE_CLASS | sed 's/export const/const/g'`
 
-CLIENT_REPLACE_FUNC=`echo $CLIENT_REPLACE_CONST | sed 's/export function/function/g'`
 
-CLIENT_FINAL_COMMON=`$CLIENT_REPLACE_FUNC`
+module_to_common "$(cat ./resource/client.cts)"
+echo $return_value > ./remote/client.ts
 
-echo $CLIENT_FINAL_COMMON > ./client/client.cjs
+module_to_common "$(cat ./resource/data.mts)"
+echo $return_value > ./remote/data.ts
 
-echo "Wrote client code..."
+cp ./resource/types.ts ./remote/types.ts
+cp ./resource/server.ts ./remote/server.ts
 
-DATA_CODE=$(cat ./resource/data.mjs)
+npx tsc
 
-DATA_REPLACE_CLASS=`echo $DATA_CODE | sed 's/export class/class/g'`
+rm -rf ./remote
 
-DATA_REPLACE_CONST=`echo $DATA_REPLACE_CLASS | sed 's/export const/const/g'`
+# mkdir ./remote-tmp
 
-DATA_REPLACE_FUNC=`echo $DATA_REPLACE_CONST | sed 's/export function/function/g'`
+# mv ./remote/compiled/remote/uncomp/ ./remote-tmp
 
-DATA_FINAL_COMMON=`$DATA_REPLACE_FUNC`
+# rm -rf ./remote
 
-echo $DATA_FINAL_COMMON > ./client/client.cjs
+# mkdir ./remote
 
-echo "Wrote data code..."
+# mv ./remote-tmp ./remote
 
-echo "Waiting for clients..."
+# rm -rf ./remote-tmp
 
-node server.js
+# echo "Fixing compiled code..."
+
+# COMP_CLIENT_CODE=$(cat ./remote/client.js)
+
+# COMP_CLIENT_CODE=`echo $COMP_CLIENT_CODE | sed 's/Object.defineProperty(exports, "__esModule", { value: true });/""/g'`
+
+# echo $COMP_CLIENT_CODE > ./remote/client.js
+
+# echo "Waiting for clients..."
+
+# npx tsx --no-warnings ./resource/server.ts &
+
+# http-server ./remote/ --cors -c-1 -p 3000
+
+# pkill node
+# pkill http-server

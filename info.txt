@@ -1,0 +1,4 @@
+STYLING SEMANTICS:
+    - Functions use camelCase
+    - Variables use snake_case
+    - Classes / Types / Interfaces use PascalCase

@@ -1,0 +1,13 @@
+// OVERALL
+☐ Implement basic server functions
+
+// SMALLER
+☐ Create the base connect, receive, close, and error functions
+☐ Make sure run.sh will work with the server.ts file in the resource folder
+☐ Create functons for adding return codes / shard types
+✔ Finish result class @done(24-12-06 08:19)
+
+// LATER
+☐ Check if the add/remove event listener on client.ts will actually remove the old one and add the new one
+
+
