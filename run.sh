@@ -25,32 +25,39 @@ cp ./resource/server.ts ./remote/server.ts
 npx tsc
 
 rm -rf ./remote
+mkdir ./remote
+mkdir ./remote/lib
+mkdir ./remote/exe
 
-# mkdir ./remote-tmp
+remove_beginning_compiled "$(cat ./remote-tmp/remote/client.js)"
+echo $return_value > ./remote/lib/client.js
 
-# mv ./remote/compiled/remote/uncomp/ ./remote-tmp
+remove_beginning_compiled "$(cat ./remote-tmp/remote/data.js)"
+echo $return_value > ./remote/lib/data.js
 
-# rm -rf ./remote
+remove_beginning_compiled "$(cat ./remote-tmp/remote/server.js)"
+echo $return_value > ./remote/lib/server.js
 
-# mkdir ./remote
+remove_beginning_compiled "$(cat ./remote-tmp/remote/types.js)"
+echo $return_value > ./remote/lib/types.js
 
-# mv ./remote-tmp ./remote
+remove_beginning_compiled "$(cat ./remote-tmp/run/server.js)"
+echo $return_value > ./remote/exe/server.js
 
-# rm -rf ./remote-tmp
+remove_beginning_compiled "$(cat ./remote-tmp/run/sketch.js)"
+echo $return_value > ./remote/exe/sketch.js
 
-# echo "Fixing compiled code..."
 
-# COMP_CLIENT_CODE=$(cat ./remote/client.js)
+rm -rf ./remote-tmp
 
-# COMP_CLIENT_CODE=`echo $COMP_CLIENT_CODE | sed 's/Object.defineProperty(exports, "__esModule", { value: true });/""/g'`
 
-# echo $COMP_CLIENT_CODE > ./remote/client.js
+# Execute stuff
 
-# echo "Waiting for clients..."
+npx tsx --no-warnings ./run/server.cts &
 
-# npx tsx --no-warnings ./resource/server.ts &
+http-server ./remote/ --cors -c-1 -p 3000 > /dev/null
 
-# http-server ./remote/ --cors -c-1 -p 3000
 
-# pkill node
-# pkill http-server
+# After exit 
+pkill node
+pkill http-server
