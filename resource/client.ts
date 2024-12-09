@@ -1,4 +1,4 @@
-import type { Packet } from "./types.ts";
+import type { Packet } from "./types.js";
 
 interface Client {
     // Methods
@@ -16,7 +16,7 @@ interface Client {
     error_func: Function|null
 }
 
-function Client(
+export function Client(
     this: Client,
     socket_url: string, 
     connect_func: Function|null = null, 

@@ -1,4 +1,4 @@
-import type { ReturnCodes, PacketTypes, PacketType, ShardTypes, Packet } from './types.ts';
+import type { ReturnCodes, PacketTypes, PacketType, ShardTypes, Packet } from './types.js';
 
 export var RETURN_CODES: ReturnCodes = {
 
