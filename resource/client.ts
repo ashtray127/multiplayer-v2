@@ -1,4 +1,5 @@
-import type { Packet } from "./types.js";
+import type { Packet, PacketTypes, PacketType, ShardTypes, ShardType } from "./types.js";
+import { BASE_PACKET_TYPES, BASE_SHARD_TYPES } from './data.js';
 
 interface Client {
     // Methods
@@ -8,15 +9,20 @@ interface Client {
     updateCloseFunc: Function
     updateErrorFunc: Function
 
+    sendString: Function
+
     // Values
     socket: WebSocket
     connect_func: Function|null
     receive_func: Function|null
     close_func: Function|null
     error_func: Function|null
+
+    packet_types: PacketTypes
+    shard_types: ShardTypes
 }
 
-export function Client(
+export function ClientBuilder(
     this: Client,
     socket_url: string, 
     connect_func: Function|null = null, 
@@ -25,6 +31,9 @@ export function Client(
     error_func: Function|null = null, 
 ) {    
     this.socket = new WebSocket(socket_url);
+    this.packet_types = BASE_PACKET_TYPES;
+    this.shard_types = BASE_SHARD_TYPES;
+
 
     let connect_to_use: Function = connect_func === null? baseConnectFunc : connect_func;
     function connectEvent(e: Event) { 
@@ -33,6 +42,14 @@ export function Client(
 
     let receive_to_use: Function = receive_func === null? baseReceiveFunc : receive_func;
     function receiveEvent(e: MessageEvent) {
+        let string_packet = e.data;
+
+        let packet: Packet = JSON.parse(string_packet);
+
+        for (let shard of packet.shards) {
+
+        }
+
         receive_to_use(e);
     }
 
@@ -66,14 +83,26 @@ export function Client(
         error_to_use = new_func
     }
 
+
+    this.sendString = function sendString(message: string){
+        console.log(this)
+        this.socket.send(message)
+    }
+
     return this
 }
+
+// For when the server makes a request to add a packet type
+function receivePacketTypeRequest(data: MessageEvent) {
+
+}
+
 
 function baseConnectFunc(event: Event){
     console.log("Connected!");
 }
 function baseReceiveFunc(data: MessageEvent){
-    console.log("Received: %s", data);
+    console.log("Received: ", data.data);
 }
 function baseCloseFunc(event: CloseEvent){
     console.log("Closed!")

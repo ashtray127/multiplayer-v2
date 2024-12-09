@@ -21,10 +21,11 @@ export interface ReturnCodes {
 
 // PACKETS --------------------------------
 export interface Packet {
-
+    type: PacketType,
+    shards: Shard[]
 }
 export interface Shard {
-    name: string,
+    type: ShardType,
 }
 
 
@@ -32,11 +33,17 @@ export interface PacketTypes {
     [key: string]: PacketType
 }
 export interface PacketType {
-    name: string,
-    handler: Function
+    id: string,
+    permissions: string[]
 }
+
 export interface ShardTypes {
-    [key: string]: Shard
+    [key: string]: ShardType
+}
+export interface ShardType {
+    id: string,
+    data: any,
+    permissions: string[]
 }
 
 // MISC ------------------------------
