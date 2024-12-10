@@ -1,21 +1,15 @@
-import type { ReturnCodes, PacketTypes, PacketType, ShardTypes, ShardType, Packet } from './types.js';
+import type { Packet } from './types.js';
 
-export var RETURN_CODES: ReturnCodes = {
 
-}
+export var SHARD_TYPES: string[] = [
+    // INIT_PACKET
+    "CREATE_DATA_VALUE",
+    "CREATE_INPUT_VALUE",
+    "SET_CLIENT_ID",
 
-export var BASE_PACKET_TYPES: PacketTypes = {
+    // DATA_PACKET
+    "MODIFY_DATA_VALUE",
 
-}
-
-export var BASE_SHARD_TYPES: ShardTypes = {
-
-}
-
-export function createPacketType(packet_type: PacketType) { 
-    BASE_PACKET_TYPES[packet_type.id] = packet_type
-}
-
-export function createShardType(shard_type: ShardType) {
-    BASE_SHARD_TYPES[shard_type.id] = shard_type
-}
+    // INPUT_PACKET
+    "INPUT_VALUE",
+]
